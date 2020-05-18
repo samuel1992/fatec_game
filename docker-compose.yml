@@ -1,0 +1,12 @@
+version: '3.5'
+services:
+  web:
+    tty: true
+    restart: always
+    stdin_open: true
+    build: .
+    hostname: 'fatec_game'
+    ports:
+      - '8000:8000'
+    volumes:
+      - .:/fatec_game
