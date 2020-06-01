@@ -1,8 +1,5 @@
 **TODO**
-
 *Urgent*
-- Automatic relate Book with user
-- Automatic relate Question with Player
 - Wizard to answer the questions
 
 *Normal*
