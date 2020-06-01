@@ -17,7 +17,7 @@ class Question(models.Model):
     pub_date = models.DateTimeField(auto_now_add=True, blank=False)
 
     def __str__(self):
-        return f'{self.text} ({self.book.title})'
+        return f'{self.text}'
 
 
 class Choice(models.Model):
