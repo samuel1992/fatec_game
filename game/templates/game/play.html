@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-
+<!--
 <div class="container">
   <div class="alert alert-success" role="alert">
    Genio! Você acertou a pergunta, jovem
@@ -13,20 +13,33 @@
     Jovem, seu tempo ta acabando
   </div>
 </div>
+-->
+
+<div class="container">
+  <div class="alert alert-info" role="alert">
+    <center>
+      O livro é: <b>{{question.book.title}}</b>
+    </center>
+  </div>
+</div>
 
 <div class="container">
   <div class="jumbotron my-4">
-    <h3 class="text-primary">Teste teste teste teste teste ajsiosajioasjdioas</h3>
+    <center>
+      <h3 class="text-primary">{{question.text}}</h3>
+    </center>
     <form class="form" action="" method="post">
       {% csrf_token %}
       <input type="hidden" name="question_pk" value="">
 
-      <div class="form-check mx-4">
-        <input class="form-check-input" type="radio" name="choice_pk" id="choice-" value="">
-        <label class="form-check-label" for="choice-">
-        </label>
-      </div>
-
+      {% for choice in choices %}
+        <div class="form-check mx-4">
+          <input class="form-check-input" type="radio" name="choice_pk" id="choice-{{ forloop.counter }}" value="{{choice.id}}">
+          <label class="form-check-label" for="choice-{{ forloop.counter }}">
+            {{ choice.text }}
+          </label>
+        </div>
+      {% endfor %}
       <input class="btn btn-dark btn-lg mt-4" type="submit" value="Responder">
     </form>
   </div>

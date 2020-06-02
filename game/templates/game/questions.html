@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="jumbotron my-4">
+        <h2 class="text-primary">{{book.title}} - {{book.author}}</h3>
+        <div class="row">
+            {% for question in questions %}
+            <div class="col-sm-6" style="margin-bottom:30px">
+                <div class="card">
+                    <div class="card-body">
+                        <p class="card-text">{{ question.text }}</p>
+                        <a href="play/{{ question.id }}" class="btn btn-primary">Responder!</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock content %}

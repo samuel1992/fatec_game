@@ -4,11 +4,12 @@
 
 *Normal*
 - Put image in books
-- Just fill one right choice in the question form
+- Show question already answered
 - Generate percentage by question
 - Generate percentage by user
 - Generate percentage by book
 - Dashboard with some results:
  - user ranking
  - book ranking
-- Statistics
+ - author ranking
+- Just fill one right choice in the question form
