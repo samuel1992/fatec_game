@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section id="section-jumbotron" class="jumbotron jumbotron-fluid d-flex justify-content-center align-items-center">
+  <div class="container text-center">
+    <h1 class="display-1 text-primary">Book Quiz</h1>
+    <p class="display-4 d-none d-sm-block">Teste seu conhecimento sobre os livros que leu</p>
+
+    <div class="row">
+      {% for book in books %}
+      <div class="col-sm-6" style="margin-bottom:30px">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">{{ book.title }}</h5>
+            <p class="card-text">{{ book.description }}</p>
+            <a href="play/{{ book.id }}" class="btn btn-primary">Jogar!</a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+  </div>
+</section>
+{% endblock content %}

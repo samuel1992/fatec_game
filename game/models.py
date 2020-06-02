@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 
 class Book(models.Model):
     title = models.CharField(max_length=100)
+    author = models.CharField(max_length=100)
     description = models.TextField(max_length=300)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
@@ -22,7 +23,9 @@ class Question(models.Model):
 
 
 class Choice(models.Model):
-    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    question = models.ForeignKey(Question, on_delete=models.CASCADE,
+                                 related_name='choices')
+    right = models.BooleanField()
     text = models.CharField(max_length=200)
 
     def __str__(self):
