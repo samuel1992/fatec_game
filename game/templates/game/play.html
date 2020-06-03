@@ -28,19 +28,10 @@
     <center>
       <h3 class="text-primary">{{question.text}}</h3>
     </center>
-    <form class="form" action="" method="post">
+    <form action="/questions/play/{{question.id}}" method="post">
       {% csrf_token %}
-      <input type="hidden" name="question_pk" value="">
-
-      {% for choice in choices %}
-        <div class="form-check mx-4">
-          <input class="form-check-input" type="radio" name="choice_pk" id="choice-{{ forloop.counter }}" value="{{choice.id}}">
-          <label class="form-check-label" for="choice-{{ forloop.counter }}">
-            {{ choice.text }}
-          </label>
-        </div>
-      {% endfor %}
-      <input class="btn btn-dark btn-lg mt-4" type="submit" value="Responder">
+      {{ form.as_p }}
+      <input type="submit" value="Submit">
     </form>
   </div>
 </div>

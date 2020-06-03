@@ -1,6 +1,7 @@
 from django.shortcuts import render
 
 from game.models import Book, Question
+from game.forms import AnswerForm
 
 
 def index(request):
@@ -20,7 +21,13 @@ def questions(request, book_id):
 
 def play(request, question_id):
     question = Question.objects.get(id=question_id)
-    choices = question.choices.all()
-    context = {'question': question, 'choices': choices}
+
+    if request.POST:
+        form = AnswerForm(question, request.POST)
+        if form.is_valid():
+            form.save()
+
+    form = AnswerForm(question)
+    context = {'question': question, 'form': form}
 
     return render(request, 'game/play.html', context)
