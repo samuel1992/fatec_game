@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.models import Group
 
-from game.models import Book, Question, Choice
+from game.models import Book, Question, Choice, Answer
 
 
 class GameModelAdmin(admin.ModelAdmin):
@@ -30,4 +30,5 @@ class QuestionAdmin(GameModelAdmin):
 admin.site.site_header = 'Gameficação na leitura'
 admin.site.register(Book, BookAdmin)
 admin.site.register(Question, QuestionAdmin)
+admin.site.register(Answer)
 admin.site.unregister(Group)

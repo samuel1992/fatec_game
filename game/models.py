@@ -26,7 +26,7 @@ class Question(models.Model):
 class Choice(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE,
                                  related_name='choices')
-    right = models.BooleanField()
+    correct = models.BooleanField()
     text = models.CharField(max_length=200)
 
     def __str__(self):
@@ -35,7 +35,6 @@ class Choice(models.Model):
 
 class Answer(models.Model):
     choice = models.ForeignKey(Choice, on_delete=models.CASCADE)
-    correct = models.BooleanField()
 
     def __str__(self):
         return f'{self.choice}'

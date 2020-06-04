@@ -31,7 +31,8 @@
     <form action="/questions/play/{{question.id}}" method="post">
       {% csrf_token %}
       {{ form.as_p }}
-      <input type="submit" value="Submit">
+      <button type="submit" class="btn btn-primary">Responder</button>
+      <input type=button class="btn btn-danger" value="Cancelar" onClick="javascript:history.go(-1);">
     </form>
   </div>
 </div>

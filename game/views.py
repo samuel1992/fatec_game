@@ -1,6 +1,6 @@
 from django.shortcuts import render
 
-from game.models import Book, Question
+from game.models import Book, Question, Choice
 from game.forms import AnswerForm
 
 
@@ -23,7 +23,7 @@ def play(request, question_id):
     question = Question.objects.get(id=question_id)
 
     if request.POST:
-        form = AnswerForm(question, request.POST)
+        form = AnswerForm(None, request.POST)
         if form.is_valid():
             form.save()
 

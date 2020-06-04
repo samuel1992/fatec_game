@@ -20,3 +20,4 @@ class AnswerForm(forms.ModelForm):
         valid = super(AnswerForm, self).is_valid()
 
         return valid and self.instance.choice.correct
+
