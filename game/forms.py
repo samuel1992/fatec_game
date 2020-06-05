@@ -1,6 +1,6 @@
 from django import forms
 
-from game.models import Answer, Choice
+from game.models import Answer
 
 
 class AnswerForm(forms.ModelForm):
@@ -15,8 +15,3 @@ class AnswerForm(forms.ModelForm):
     class Meta:
         model = Answer
         fields = ('choice', )
-
-    def is_valid(self):
-        valid = super(AnswerForm, self).is_valid()
-
-        return valid and self.instance.choice.correct

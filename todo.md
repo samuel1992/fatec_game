@@ -3,7 +3,7 @@
 - Wizard to answer the questions
 
 *Normal*
-- Put image in books
+- Put a cover image, success image and failure image in books
 - Show question already answered
 - Generate percentage by question
 - Generate percentage by user

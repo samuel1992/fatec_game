@@ -20,14 +20,14 @@ def questions(request, book_id):
 
 
 def play(request, question_id):
-    question = Question.objects.get(id=question_id)
-
     if request.POST:
         form = AnswerForm(None, request.POST)
         if form.is_valid():
             form.save()
+            return render(request, 'game/check_answer.html', {'answer':
+                                                              form.instance})
 
-    form = AnswerForm(question)
+    question = Question.objects.get(id=question_id)
+    form = AnswerForm(question=question)
     context = {'question': question, 'form': form}
-
     return render(request, 'game/play.html', context)

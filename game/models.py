@@ -36,5 +36,14 @@ class Choice(models.Model):
 class Answer(models.Model):
     choice = models.ForeignKey(Choice, on_delete=models.CASCADE)
 
+    def is_correct(self):
+        return self.choice.correct
+
+    def question(self):
+        return Question.objects.get(id=self.choice.question.id)
+
+    def book(self):
+        return Book.objects.get(id=self.choice.question.book.id)
+
     def __str__(self):
         return f'{self.choice}'
