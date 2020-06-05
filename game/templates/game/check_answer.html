@@ -1,33 +1,19 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<!--
-<div class="container">
-  <div class="alert alert-success" role="alert">
-   Genio! Você acertou a pergunta, jovem
-  </div>
-  <div class="alert alert-danger" role="alert">
-    Jovem, você errou!
-  </div>
-  <div class="alert alert-warning" role="alert">
-    Jovem, seu tempo ta acabando
-  </div>
-</div>
--->
-
 <div class="container">
     {% if answer.is_correct %}
         <div class="alert alert-success" role="alert">
-            Genio! Você acertou a pergunta
+            Genio! Você acertou.
         </div>
     {% else %}
         <div class="alert alert-danger" role="alert">
             Jovem, você errou!
         </div>
+        <a href="/questions/play/{{ answer.question.id }}" class="btn btn-info">Tentar novamente</a>
     {% endif %}
-    <a href="/questions/play/{{ answer.question.id }}" class="btn btn-primary">Tentar novamente</a>
     <a href="/questions/{{ answer.book.id }}" class="btn btn-warning">Voltar para perguntas</a>
-    <br>
-    <br>
+    <a href="/" class="btn btn-primary">Início</a>
+    <br><br>
 </div>
 {% endblock content %}

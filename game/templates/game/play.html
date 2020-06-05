@@ -1,39 +1,33 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<!--
-<div class="container">
-  <div class="alert alert-success" role="alert">
-   Genio! Você acertou a pergunta, jovem
-  </div>
-  <div class="alert alert-danger" role="alert">
-    Jovem, você errou!
-  </div>
-  <div class="alert alert-warning" role="alert">
-    Jovem, seu tempo ta acabando
-  </div>
-</div>
--->
-
-<div class="container">
-  <div class="alert alert-info" role="alert">
-    <center>
-      O livro é: <b>{{question.book.title}}</b>
-    </center>
-  </div>
-</div>
-
 <div class="container">
   <div class="jumbotron my-4">
     <center>
       <h3 class="text-primary">{{question.text}}</h3>
     </center>
     <form action="/questions/play/{{question.id}}" method="post">
-      {% csrf_token %}
-      {{ form.as_p }}
-      <button type="submit" class="btn btn-primary">Responder</button>
-      <input type=button class="btn btn-danger" value="Cancelar" onClick="javascript:history.go(-1);">
-      {{form.errors}}
+      <fieldset class="form-group">
+        <div class="row">
+          <div class="col-sm-10">
+            {% csrf_token %}
+            {% for choice in form.choice %}
+            <div class="form-check">
+              {{ choice.tag }}
+              <label class="form-check-label" for="{{ choice.id_for_label }}">
+                {{ choice.choice_label }}
+              </label>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </fieldset>
+      <div class="form-group row">
+        <div class="col-sm-10">
+          <input type="submit" class="btn btn-primary" value="Responder"></button>
+          <input type=button class="btn btn-danger" value="Cancelar" onClick="javascript:history.go(-1);">
+        </div>
+      </div>
     </form>
   </div>
 </div>
