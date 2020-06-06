@@ -85,3 +85,48 @@ class AnswerTest(TestCase):
     def test_answer_representarion(self):
         answer = Answer.objects.create(choice=self.choice_1)
         self.assertEqual(str(answer), answer.choice.text)
+
+
+class IndexViewTest(TestCase):
+    def test_get(self):
+        response = self.client.get('/', follow=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'game/home.html')
+
+
+class QuestionsViewTest(TestCase):
+    def setUp(self):
+        user = User.objects.create_user(username='samuel', password='123456')
+        self.book = Book.objects.create(title='Genealogia da Moral',
+                                        author='Nietzsche',
+                                        description='Uma descrição',
+                                        user=user)
+
+    def test_get(self):
+        response = self.client.get(f'/questions/{self.book.id}', follow=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'game/questions.html')
+
+
+class PlayViewTest(TestCase):
+    def setUp(self):
+        user = User.objects.create_user(username='samuel', password='123456')
+        book = Book.objects.create(title='Genealogia da Moral',
+                                   author='Nietzsche',
+                                   description='Uma descrição',
+                                   user=user)
+        self.question = Question.objects.create(book=book,
+                                                user=user,
+                                                text='teste questao')
+
+    def test_get(self):
+        response = self.client.get(f'/questions/play/{self.question.id}')
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'game/play.html')
+
+    def test_post(self):
+        payload = {'choice': 1}
+        response = self.client.post(f'/questions/play/{self.question.id}',
+                                    payload)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'game/check_answer.html')
