@@ -1,8 +1,9 @@
 **TODO**
-*Urgent*
-- Wizard to answer the questions
 
 *Normal*
+- Question level
+- Score point/level
+- Change question value for average based on question level
 - Put a cover image, success image and failure image in books
 - Show question already answered
 - Generate percentage by question
@@ -12,4 +13,3 @@
  - user ranking
  - book ranking
  - author ranking
-- Just fill one right choice in the question form

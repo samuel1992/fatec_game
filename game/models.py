@@ -39,9 +39,11 @@ class Answer(models.Model):
     def is_correct(self):
         return self.choice.correct
 
+    @property
     def question(self):
         return Question.objects.get(id=self.choice.question.id)
 
+    @property
     def book(self):
         return Book.objects.get(id=self.choice.question.book.id)
 
