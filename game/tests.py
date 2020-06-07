@@ -1,7 +1,9 @@
 from django.test import TestCase
+from django.contrib.admin.sites import AdminSite
 
 from game.models import Book, Question, Choice, Answer, User
-from game.views import index, questions, play
+from game.admin import BookAdmin
+from game.apps import GameConfig
 
 
 class BookTest(TestCase):
@@ -118,6 +120,9 @@ class PlayViewTest(TestCase):
         self.question = Question.objects.create(book=book,
                                                 user=user,
                                                 text='teste questao')
+        self.choice = Choice.objects.create(question=self.question,
+                                            correct=False,
+                                            text='Uma possível resposta')
 
     def test_get(self):
         response = self.client.get(f'/questions/play/{self.question.id}')
@@ -125,8 +130,32 @@ class PlayViewTest(TestCase):
         self.assertTemplateUsed(response, 'game/play.html')
 
     def test_post(self):
-        payload = {'choice': 1}
+        payload = {'choice': [f'{self.choice.id}']}
         response = self.client.post(f'/questions/play/{self.question.id}',
                                     payload)
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'game/check_answer.html')
+        self.assertRedirects(response, '/check_answer/1')
+
+
+class MockAdminRequest:
+    pass
+
+
+class AdminTest(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='samuel',
+                                             password='123456')
+        self.site = AdminSite()
+        self.mock_request = MockAdminRequest
+        self.mock_request.user = self.user
+
+    def test_admin_save_model_using_a_book(self):
+        book = Book(title='teste', author='teste', description='teste',
+                    user=self.user)
+        book_admin = BookAdmin(book, self.site)
+        book_admin.save_model(request=self.mock_request, obj=book_admin.model)
+        self.assertIsNotNone(Book.objects.get(id=book.id))
+
+
+class TestGameConfig(TestCase):
+    def test_game_config_name(self):
+        self.assertEqual(GameConfig.name, 'game')

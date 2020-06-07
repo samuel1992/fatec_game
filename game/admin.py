@@ -5,7 +5,7 @@ from game.models import Book, Question, Choice, Answer
 
 
 class GameModelAdmin(admin.ModelAdmin):
-    def save_model(self, request, obj, form, change):
+    def save_model(self, request=None, obj=None, form=None, change=None):
         obj.user = request.user
         obj.last_modifield_by = request.user
         obj.save()

@@ -1,6 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
-from game.models import Book, Question, Choice
+from game.models import Book, Question, Choice, Answer
 from game.forms import AnswerForm
 
 
@@ -24,10 +24,14 @@ def play(request, question_id):
         form = AnswerForm(None, request.POST)
         if form.is_valid():
             form.save()
-            return render(request, 'game/check_answer.html', {'answer':
-                                                              form.instance})
+            return redirect('check_answer', answer_id=form.instance.id)
 
     question = Question.objects.get(id=question_id)
     form = AnswerForm(question=question)
     context = {'question': question, 'form': form}
     return render(request, 'game/play.html', context)
+
+
+def check_answer(request, answer_id):
+    answer = Answer.objects.get(id=answer_id)
+    return render(request, 'game/check_answer.html', {'answer': answer})
