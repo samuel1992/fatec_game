@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% if form.errors %}
+    <div class="alert alert-danger" role="alert">
+       Senha ou usuário inválido
+    </div>
+{% endif %}
+
+<div class="container">
+    <div class="jumbotron my-4">
+        <center>
+            <form action="" method="post">
+                {% csrf_token %}
+                <fieldset class="form-group">
+                    <div class="row">
+                        <div class="col-sm-10">
+                            Usuario  {{ form.username }}
+                            Senha  {{ form.password }}
+                            || <input type="submit" class="btn btn-primary" value="Entrar">
+                            <input type="hidden" name="next" value="{{ next }}" />
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+        </center>
+    </div>
+</div>
+
+{% endblock content %}

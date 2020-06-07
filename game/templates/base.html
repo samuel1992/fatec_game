@@ -11,7 +11,16 @@
         <title>{% block title %}Book Quiz{% endblock %}</title>
     </head>
     <body class='bg-white'>
-        <h1><a href="/">Book Quiz</a></h1>
+        <div class="row">
+            <div class="col-sm-10">
+                <h1><a href="/">Book Quiz</a></h1>
+            </div>
+            {% if user.is_authenticated %}
+            <div class="col-sm-2">
+                <a href="{% url "logout" %}?next=/">SAIR DO SISTEMA</a>
+            </div>
+            {% endif %}
+        </div>
 
         {% block content %}
         {% endblock content %}

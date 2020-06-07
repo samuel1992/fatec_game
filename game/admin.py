@@ -16,6 +16,12 @@ class BookAdmin(GameModelAdmin):
     list_display = ('title', 'description', 'user')
 
 
+class AnswerAdmin(GameModelAdmin):
+    exclude = ('user',)
+    list_display = ('choice', 'question', 'is_correct', 'user')
+    list_filter = ('user', 'choice')
+
+
 class ChoicesInline(admin.TabularInline):
     model = Choice
 
@@ -30,5 +36,5 @@ class QuestionAdmin(GameModelAdmin):
 admin.site.site_header = 'Gameficação na leitura'
 admin.site.register(Book, BookAdmin)
 admin.site.register(Question, QuestionAdmin)
-admin.site.register(Answer)
+admin.site.register(Answer, AnswerAdmin)
 admin.site.unregister(Group)

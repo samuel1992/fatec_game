@@ -1,9 +1,11 @@
 from django.test import TestCase
 from django.contrib.admin.sites import AdminSite
 
-from game.models import Book, Question, Choice, Answer, User
+from game.models import Book, Question, Choice, Answer, User, Player
 from game.admin import BookAdmin
 from game.apps import GameConfig
+
+CHOICE_VALUE = 2
 
 
 class BookTest(TestCase):
@@ -50,16 +52,20 @@ class ChoiceTest(TestCase):
     def test_choice_representation(self):
         self.assertEqual(str(self.choice), self.choice.text)
 
+    def test_choice_value(self):
+        self.assertEqual(self.choice.value, CHOICE_VALUE)
+
 
 class AnswerTest(TestCase):
     def setUp(self):
-        user = User.objects.create_user(username='samuel', password='123456')
+        self.user = User.objects.create_user(username='samuel',
+                                             password='123456')
         self.book = Book.objects.create(title='Genealogia da Moral',
                                         author='Nietzsche',
                                         description='Uma descrição',
-                                        user=user)
+                                        user=self.user)
         self.question = Question.objects.create(book=self.book,
-                                                user=user,
+                                                user=self.user,
                                                 text='Uma pergunta')
         self.choice_1 = Choice.objects.create(question=self.question,
                                               correct=False,
@@ -69,27 +75,68 @@ class AnswerTest(TestCase):
                                               text='Outra resposta')
 
     def test_incorrect_answer(self):
-        answer = Answer.objects.create(choice=self.choice_1)
+        answer = Answer.objects.create(choice=self.choice_1, user=self.user)
         self.assertEqual(answer.is_correct(), False)
 
     def test_correct_answer(self):
-        answer = Answer.objects.create(choice=self.choice_2)
+        answer = Answer.objects.create(choice=self.choice_2, user=self.user)
         self.assertEqual(answer.is_correct(), True)
 
     def test_return_related_question(self):
-        answer = Answer.objects.create(choice=self.choice_1)
+        answer = Answer.objects.create(choice=self.choice_1, user=self.user)
         self.assertEqual(answer.question, self.question)
 
     def test_return_related_book(self):
-        answer = Answer.objects.create(choice=self.choice_1)
+        answer = Answer.objects.create(choice=self.choice_1, user=self.user)
         self.assertEqual(answer.book, self.book)
 
     def test_answer_representarion(self):
-        answer = Answer.objects.create(choice=self.choice_1)
+        answer = Answer.objects.create(choice=self.choice_1, user=self.user)
         self.assertEqual(str(answer), answer.choice.text)
 
+    def test_answer_length(self):
+        qtd_answers = 2
+        for i in range(qtd_answers):
+            answer = Answer.objects.create(choice=self.choice_1,
+                                           user=self.user)
 
-class IndexViewTest(TestCase):
+        self.assertEqual(len(answer), qtd_answers)
+
+
+class PlayerTest(TestCase):
+    def setUp(self):
+        user = User.objects.create_user(username='samuel',
+                                        password='123456')
+        self.player = Player.objects.create(user=user)
+        book = Book.objects.create(title='Genealogia da Moral',
+                                   author='Nietzsche',
+                                   description='Uma descrição',
+                                   user=user)
+        self.question = Question.objects.create(book=book,
+                                                user=user,
+                                                text='Uma pergunta')
+        choice_1 = Choice.objects.create(question=self.question,
+                                         correct=True,
+                                         text='Uma possível resposta')
+        Choice.objects.create(question=self.question, correct=False,
+                              text='Outra resposta')
+        self.answer = Answer.objects.create(choice=choice_1,
+                                            user=user)
+
+    def test_add_point_to_player(self):
+        qtd_choices_created_in_setUp = 2
+        expected_point_value = qtd_choices_created_in_setUp * CHOICE_VALUE
+
+        self.player.add_point(self.question, self.answer)
+        point = self.player.points.get(player=self.player)
+        self.assertEqual(point.value, expected_point_value)
+
+
+class HomeViewTest(TestCase):
+    def setUp(self):
+        User.objects.create_user(username='samuel', password='123456')
+        self.client.login(username='samuel', password='123456')
+
     def test_get(self):
         response = self.client.get('/', follow=True)
         self.assertEqual(response.status_code, 200)
@@ -103,6 +150,7 @@ class QuestionsViewTest(TestCase):
                                         author='Nietzsche',
                                         description='Uma descrição',
                                         user=user)
+        self.client.login(username='samuel', password='123456')
 
     def test_get(self):
         response = self.client.get(f'/questions/{self.book.id}', follow=True)
@@ -123,6 +171,7 @@ class PlayViewTest(TestCase):
         self.choice = Choice.objects.create(question=self.question,
                                             correct=False,
                                             text='Uma possível resposta')
+        self.client.login(username='samuel', password='123456')
 
     def test_get(self):
         response = self.client.get(f'/questions/play/{self.question.id}')
