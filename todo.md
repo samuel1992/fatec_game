@@ -1,9 +1,7 @@
 **TODO**
 
 *Normal*
-- Question level
-- Score point/level
-- Change question value for average based on question level
+- Cutom Question level
 - Put a cover image, success image and failure image in books
 - Show question already answered
 - Generate percentage by question
