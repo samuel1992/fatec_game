@@ -1,8 +1,8 @@
 **TODO**
 
 *Normal*
+- Create user profile when create new user
 - Cutom Question level
-- Put a cover image, success image and failure image in books
 - Show question already answered
 - Generate percentage by question
 - Generate percentage by user
@@ -11,3 +11,4 @@
  - user ranking
  - book ranking
  - author ranking
+- Put a cover image, in books

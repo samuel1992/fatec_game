@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models.signals import post_save
 from django.contrib.auth.models import User
 
 CHOICE_VALUE = 2
@@ -70,6 +71,13 @@ class Player(models.Model):
     def add_point(self, question, answer):
         Point.objects.create(player=self, question=question, answer=answer)
 
+    @property
+    def score(self):
+        return sum(i.value for i in self.points.all())
+
+    def __str__(self):
+        return f'{self.user.username}'
+
 
 class Point(models.Model):
     player = models.ForeignKey(Player, on_delete=models.CASCADE,
@@ -90,3 +98,11 @@ class Point(models.Model):
         choices = self.__remove_choices_by_qtd_of_wrong_answers(wrong_answers)
 
         return sum(i.value for i in choices)
+
+
+def create_player(sender, instance, created, **kwargs):
+    if created:
+        Player.objects.create(user=instance)
+
+
+post_save.connect(create_player, sender=User)

@@ -2,18 +2,19 @@
 
 {% block content %}
 <div class="container">
-    {% if answer.is_correct %}
-        <div class="alert alert-success" role="alert">
-            Genio! Você acertou.
-        </div>
-    {% else %}
-        <div class="alert alert-danger" role="alert">
-          Jovem, você errou! Essa foi sua tentativa número <b>{{ answer|length }}</b>
-        </div>
-        <a href="/questions/play/{{ answer.question.id }}" class="btn btn-info">Tentar novamente</a>
-    {% endif %}
-    <a href="/questions/{{ answer.book.id }}" class="btn btn-warning">Voltar para perguntas</a>
-    <a href="/" class="btn btn-primary">Início</a>
-    <br><br>
+  <br>
+  {% if answer.is_correct %}
+  <div class="card-panel teal lighten-2">
+    Genio! Você acertou.
+  </div>
+  {% else %}
+  <div class="card-panel red lighten-2">
+    Jovem, você errou! Essa foi sua tentativa número <b>{{ answer|length }}</b>
+  </div>
+  <a href="/questions/play/{{ answer.question.id }}" class="btn">Tentar novamente</a>
+  {% endif %}
+  <a href="/questions/{{ answer.book.id }}" class="btn">Voltar para perguntas</a>
+  <a href="/" class="btn">Início</a>
+  <br><br>
 </div>
 {% endblock content %}

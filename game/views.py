@@ -32,6 +32,8 @@ def play(request, question_id):
             answer = form.save(commit=False)
             answer.user = request.user
             answer.save()
+            player = request.user.player.first()
+            player.add_point(question, answer)
             return redirect('check_answer', answer_id=answer.id)
 
     form = AnswerForm(question)

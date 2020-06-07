@@ -131,6 +131,13 @@ class PlayerTest(TestCase):
         point = self.player.points.get(player=self.player)
         self.assertEqual(point.value, expected_point_value)
 
+    def test_player_representarion(self):
+        self.assertEqual(str(self.player), self.player.user.username)
+
+    def test_player_score(self):
+        self.player.add_point(self.question, self.answer)
+        self.assertEqual(self.player.score, 4)
+
 
 class HomeViewTest(TestCase):
     def setUp(self):

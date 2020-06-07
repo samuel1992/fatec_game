@@ -7,24 +7,23 @@
     </div>
 {% endif %}
 
-<div class="container">
-    <div class="jumbotron my-4">
-        <center>
-            <form action="" method="post">
-                {% csrf_token %}
-                <fieldset class="form-group">
-                    <div class="row">
-                        <div class="col-sm-10">
-                            Usuario  {{ form.username }}
-                            Senha  {{ form.password }}
-                            || <input type="submit" class="btn btn-primary" value="Entrar">
-                            <input type="hidden" name="next" value="{{ next }}" />
-                        </div>
-                    </div>
-                </fieldset>
-            </form>
-        </center>
+<div class="section no-pad-bot" id="index-banner">
+  <div class="container">
+    <br><br>
+    <div class="row center">
+      <form action="" method="post">
+        {% csrf_token %}
+        <div class="input-field col s6">
+          <input placeholder="Usuário" id="{{ form.username.id_for_label }}" name="{{ form.username.name }}" type="text" class="validate">
+        </div>
+        <div class="input-field col s6">
+          <input placeholder="Senha" id="{{ form.password.id_for_label}}" name="{{ form.password.name }}" type="password" class="validate">
+        </div>
+        <input type="submit" class="waves-effect waves-light btn" value="Entrar">
+      </form>
     </div>
+    <br><br>
+  </div>
 </div>
 
 {% endblock content %}
