@@ -10,4 +10,5 @@ RUN pip install -r requirements.txt
 
 COPY . /fatec_game
 
+CMD /fatec_game/manage.py migrate
 CMD /fatec_game/manage.py runserver 0.0.0.0:8000
