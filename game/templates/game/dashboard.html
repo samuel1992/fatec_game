@@ -18,15 +18,15 @@
         data.addColumn('number', 'Slices');
         data.addRows([
         {% for book in book_by_author %}
-                ["{{ book.author }}", {{ book.id__count }}],
+          ["{{ book.author }}", {{ book.id__count }}],
         {% endfor %}
         ]);
 
         // Set chart options
         var options = {
             'title':'Livro por escritor',
-            'width':700,
-            'height':500
+            'width':500,
+            'height':300
         };
 
         // Instantiate and draw our chart, passing in some options.
@@ -48,14 +48,15 @@
         // Set chart options
         var options = {
             'title':'Respostas por livro',
-            'width':700,
-            'height':500
+            'width':500,
+            'height':300
         };
 
         // Instantiate and draw our chart, passing in some options.
         var chart = new google.visualization.PieChart(document.getElementById('answer_by_book'));
         chart.draw(data, options);
     }
+
     function drawAnswerByUserChart() {
         // Create the data table.
         var data = new google.visualization.DataTable();
@@ -70,8 +71,8 @@
         // Set chart options
         var options = {
             'title':'Respostas por Usuario',
-            'width':700,
-            'height':500
+            'width':500,
+            'height':300
         };
 
         // Instantiate and draw our chart, passing in some options.
@@ -83,15 +84,13 @@
 
 {% block content %}
 <div class="row">
-    <div class="col s6">
+    <div class="col s4">
         <div id="book_by_author"></div>
     </div>
-    <div class="col s6">
+    <div class="col s4">
         <div id="answer_by_book"></div>
     </div>
-</div>
-<div class="row">
-    <div class="col s6">
+    <div class="col s4">
         <div id="answer_by_user"></div>
     </div>
 </div>

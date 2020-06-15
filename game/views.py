@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count
+from django.db.models.functions import TruncDay
 
 from game.models import Book, Question, Answer
 from game.forms import AnswerForm
@@ -56,10 +57,15 @@ def dashboard(request):
         .annotate(Count('id'))
     answer_by_user = Answer.objects.values('user__username')\
         .annotate(Count('id'))
+    answer_by_date = Answer.objects \
+        .annotate(month=TruncDay('pub_date')) \
+        .values('pub_date') \
+        .annotate(Count('id'))
 
     context = {
         'book_by_author': book_by_author,
         'answer_by_book': answer_by_book,
-        'answer_by_user': answer_by_user
+        'answer_by_user': answer_by_user,
+        'answer_by_date': answer_by_date
     }
     return render(request, 'game/dashboard.html', context)

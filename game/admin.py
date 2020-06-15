@@ -29,7 +29,7 @@ class ChoicesInline(admin.TabularInline):
 class QuestionAdmin(GameModelAdmin):
     inlines = [ChoicesInline]
     exclude = ('user',)
-    list_display = ('text', 'book', 'pub_date', 'user')
+    list_display = ('text', 'book', 'pub_date', 'level', 'user')
     list_filter = ('text', 'book', 'user')
 
 

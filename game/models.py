@@ -2,8 +2,6 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.contrib.auth.models import User
 
-CHOICE_VALUE = 2
-
 
 class Book(models.Model):
     title = models.CharField(max_length=100)
@@ -16,10 +14,16 @@ class Book(models.Model):
 
 
 class Question(models.Model):
+    LEVELS = [
+        (2, 'EASY'),
+        (4, 'REGULAR'),
+        (6, 'HARD')
+    ]
     book = models.ForeignKey(Book, on_delete=models.CASCADE,
                              related_name='questions')
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     text = models.CharField(max_length=200)
+    level = models.IntegerField(choices=LEVELS)
     pub_date = models.DateTimeField(auto_now_add=True, blank=False)
 
     def __str__(self):
@@ -34,16 +38,18 @@ class Choice(models.Model):
 
     @property
     def value(self):
-        return CHOICE_VALUE
+        return self.question.level
 
     def __str__(self):
         return f'{self.text}'
 
 
 class Answer(models.Model):
-    choice = models.ForeignKey(Choice, on_delete=models.CASCADE)
+    choice = models.ForeignKey(Choice, on_delete=models.CASCADE,
+                               related_name='answers')
     user = models.ForeignKey(User, on_delete=models.CASCADE,
                              related_name='answers')
+    pub_date = models.DateTimeField(auto_now_add=True, blank=False)
 
     def is_correct(self):
         return self.choice.correct
