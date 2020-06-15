@@ -8,6 +8,7 @@
     google.charts.setOnLoadCallback(drawBookByAuthorChart);
     google.charts.setOnLoadCallback(drawAnswerByBookChart);
     google.charts.setOnLoadCallback(drawAnswerByUserChart);
+    google.charts.setOnLoadCallback(drawAnswerByDateChart);
     // Callback that creates and populates a data table,
     // instantiates the pie chart, passes in the data and
     // draws it.
@@ -79,6 +80,28 @@
         var chart = new google.visualization.PieChart(document.getElementById('answer_by_user'));
         chart.draw(data, options);
     }
+
+    function drawAnswerByDateChart() {
+
+      var data = google.visualization.arrayToDataTable([
+        {% for answer in answer_by_date %}
+          ['Dia', 'Respostas'],
+          ["{{ answer.pub_date.day }}", {{ answer.id__count }}],
+        {% endfor %}
+      ]);
+
+      var options = {
+        title: 'Respostas por dia do mês atual',
+        curveType: 'function',
+        legend: { position: 'bottom' },
+        width:1200,
+        height:500
+      };
+
+      var chart = new google.visualization.LineChart(document.getElementById('answer_by_date'));
+
+      chart.draw(data, options);
+    }
 </script>
 {% endblock scripthead %}
 
@@ -93,5 +116,10 @@
     <div class="col s4">
         <div id="answer_by_user"></div>
     </div>
+</div>
+<div class="row">
+  <center>
+    <div id="answer_by_date"></div>
+  </center>
 </div>
 {% endblock content %}
