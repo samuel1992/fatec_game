@@ -19,7 +19,9 @@
     <nav class="light-blue lighten-1" role="navigation">
       <div class="nav-wrapper container">
         <span id="logo-container" href="/" class="brand-logor" style="font-size:20px; color: #eeeeee">
-          {{ user.username.capitalize }} | score: {{ user.player.first.score}}
+          {% if user.is_authenticated %}
+            {{ user.username.capitalize }} | score: {{ user.player.first.score}}
+          {% endif %}
         </span>
         <a id="logo-container" href="/" class="brand-logo center">
           Book Quiz
@@ -35,6 +37,7 @@
         <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
       </div>
     </nav>
+    {% if user.is_authenticated %}
     <nav>
       <div class="nav-wrapper">
         <ul id="nav-mobile" class="left hide-on-med-and-down">
@@ -43,6 +46,7 @@
         </ul>
       </div>
     </nav>
+    {% endif %}
 
     {% block content %}
     {% endblock content %}
