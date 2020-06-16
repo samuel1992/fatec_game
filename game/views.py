@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
+from django.db.models import Count
+from django.db.models.functions import TruncDay
 
 from game.models import Book, Question, Answer
 from game.forms import AnswerForm
@@ -32,7 +33,6 @@ def play(request, question_id):
             answer = form.save(commit=False)
             answer.user = request.user
             answer.save()
-
             if answer.is_correct():
                 player = request.user.player.first()
                 player.add_point(question, answer)
@@ -48,3 +48,24 @@ def play(request, question_id):
 def check_answer(request, answer_id):
     answer = Answer.objects.get(id=answer_id)
     return render(request, 'game/check_answer.html', {'answer': answer})
+
+
+@login_required
+def dashboard(request):
+    book_by_author = Book.objects.values('author').annotate(Count('id'))
+    answer_by_book = Answer.objects.values('choice__question__book__title')\
+        .annotate(Count('id'))
+    answer_by_user = Answer.objects.values('user__username')\
+        .annotate(Count('id'))
+    answer_by_date = Answer.objects \
+        .annotate(month=TruncDay('pub_date')) \
+        .values('pub_date') \
+        .annotate(Count('id'))
+
+    context = {
+        'book_by_author': book_by_author,
+        'answer_by_book': answer_by_book,
+        'answer_by_user': answer_by_user,
+        'answer_by_date': answer_by_date
+    }
+    return render(request, 'game/dashboard.html', context)

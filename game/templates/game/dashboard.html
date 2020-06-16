@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+
+{% block scripthead %}
+<script type="text/javascript">
+    // Load the Visualization API and the corechart package.
+    google.charts.load('current', {'packages':['corechart']});
+    // Set a callback to run when the Google Visualization API is loaded.
+    google.charts.setOnLoadCallback(drawBookByAuthorChart);
+    google.charts.setOnLoadCallback(drawAnswerByBookChart);
+    google.charts.setOnLoadCallback(drawAnswerByUserChart);
+    google.charts.setOnLoadCallback(drawAnswerByDateChart);
+    // Callback that creates and populates a data table,
+    // instantiates the pie chart, passes in the data and
+    // draws it.
+    function drawBookByAuthorChart() {
+        // Create the data table.
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Topping');
+        data.addColumn('number', 'Slices');
+        data.addRows([
+        {% for book in book_by_author %}
+          ["{{ book.author }}", {{ book.id__count }}],
+        {% endfor %}
+        ]);
+
+        // Set chart options
+        var options = {
+            'title':'Livro por escritor',
+            'width':500,
+            'height':300
+        };
+
+        // Instantiate and draw our chart, passing in some options.
+        var chart = new google.visualization.PieChart(document.getElementById('book_by_author'));
+        chart.draw(data, options);
+    }
+
+    function drawAnswerByBookChart() {
+        // Create the data table.
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Topping');
+        data.addColumn('number', 'Slices');
+        data.addRows([
+        {% for answer in answer_by_book %}
+                ["{{ answer.choice__question__book__title}}", {{ answer.id__count }}],
+        {% endfor %}
+        ]);
+
+        // Set chart options
+        var options = {
+            'title':'Respostas por livro',
+            'width':500,
+            'height':300
+        };
+
+        // Instantiate and draw our chart, passing in some options.
+        var chart = new google.visualization.PieChart(document.getElementById('answer_by_book'));
+        chart.draw(data, options);
+    }
+
+    function drawAnswerByUserChart() {
+        // Create the data table.
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Topping');
+        data.addColumn('number', 'Slices');
+        data.addRows([
+        {% for answer in answer_by_user %}
+            ["{{ answer.user__username }}", {{ answer.id__count }}],
+        {% endfor %}
+        ]);
+
+        // Set chart options
+        var options = {
+            'title':'Respostas por Usuario',
+            'width':500,
+            'height':300
+        };
+
+        // Instantiate and draw our chart, passing in some options.
+        var chart = new google.visualization.PieChart(document.getElementById('answer_by_user'));
+        chart.draw(data, options);
+    }
+
+    function drawAnswerByDateChart() {
+
+      var data = google.visualization.arrayToDataTable([
+        {% for answer in answer_by_date %}
+          ['Dia', 'Respostas'],
+          ["{{ answer.pub_date.day }}", {{ answer.id__count }}],
+        {% endfor %}
+      ]);
+
+      var options = {
+        title: 'Respostas por dia do mês atual',
+        curveType: 'function',
+        legend: { position: 'bottom' },
+        width:1200,
+        height:500
+      };
+
+      var chart = new google.visualization.LineChart(document.getElementById('answer_by_date'));
+
+      chart.draw(data, options);
+    }
+</script>
+{% endblock scripthead %}
+
+{% block content %}
+<div class="row">
+    <div class="col s4">
+        <div id="book_by_author"></div>
+    </div>
+    <div class="col s4">
+        <div id="answer_by_book"></div>
+    </div>
+    <div class="col s4">
+        <div id="answer_by_user"></div>
+    </div>
+</div>
+<div class="row">
+  <center>
+    <div id="answer_by_date"></div>
+  </center>
+</div>
+{% endblock content %}

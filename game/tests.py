@@ -5,8 +5,6 @@ from game.models import Book, Question, Choice, Answer, User, Player
 from game.admin import BookAdmin
 from game.apps import GameConfig
 
-CHOICE_VALUE = 2
-
 
 class BookTest(TestCase):
     def setUp(self):
@@ -29,6 +27,7 @@ class QuestionTest(TestCase):
                                    user=user)
         self.question = Question.objects.create(book=book,
                                                 user=user,
+                                                level=2,
                                                 text='teste questao')
 
     def test_question_representation(self):
@@ -44,6 +43,7 @@ class ChoiceTest(TestCase):
                                    user=user)
         question = Question.objects.create(book=book,
                                            user=user,
+                                           level=2,
                                            text='teste questao')
         self.choice = Choice.objects.create(question=question,
                                             correct=False,
@@ -53,7 +53,7 @@ class ChoiceTest(TestCase):
         self.assertEqual(str(self.choice), self.choice.text)
 
     def test_choice_value(self):
-        self.assertEqual(self.choice.value, CHOICE_VALUE)
+        self.assertEqual(self.choice.value, self.choice.question.level)
 
 
 class AnswerTest(TestCase):
@@ -66,6 +66,7 @@ class AnswerTest(TestCase):
                                         user=self.user)
         self.question = Question.objects.create(book=self.book,
                                                 user=self.user,
+                                                level=2,
                                                 text='Uma pergunta')
         self.choice_1 = Choice.objects.create(question=self.question,
                                               correct=False,
@@ -114,6 +115,7 @@ class PlayerTest(TestCase):
                                    user=user)
         self.question = Question.objects.create(book=book,
                                                 user=user,
+                                                level=2,
                                                 text='Uma pergunta')
         choice_1 = Choice.objects.create(question=self.question,
                                          correct=True,
@@ -125,7 +127,8 @@ class PlayerTest(TestCase):
 
     def test_add_point_to_player(self):
         qtd_choices_created_in_setUp = 2
-        expected_point_value = qtd_choices_created_in_setUp * CHOICE_VALUE
+        expected_point_value = \
+            qtd_choices_created_in_setUp * self.question.level
 
         self.player.add_point(self.question, self.answer)
         point = self.player.points.get(player=self.player)
@@ -174,10 +177,14 @@ class PlayViewTest(TestCase):
                                    user=user)
         self.question = Question.objects.create(book=book,
                                                 user=user,
+                                                level=2,
                                                 text='teste questao')
         self.choice = Choice.objects.create(question=self.question,
                                             correct=False,
                                             text='Uma possível resposta')
+        self.choice_1 = Choice.objects.create(question=self.question,
+                                              correct=True,
+                                              text='A resposta correta')
         self.client.login(username='samuel', password='123456')
 
     def test_get(self):
@@ -189,7 +196,38 @@ class PlayViewTest(TestCase):
         payload = {'choice': [f'{self.choice.id}']}
         response = self.client.post(f'/questions/play/{self.question.id}',
                                     payload)
-        self.assertRedirects(response, '/check_answer/1')
+        answer_id = self.choice.answers.last().id
+        self.assertRedirects(response, f'/check_answer/{answer_id}')
+
+    def test_post_correct_answer(self):
+        payload = {'choice': [f'{self.choice_1.id}']}
+        response = self.client.post(f'/questions/play/{self.question.id}',
+                                    payload)
+        answer_id = self.choice_1.answers.last().id
+        self.assertRedirects(response, f'/check_answer/{answer_id}')
+
+
+class DashboardViewTest(TestCase):
+    def setUp(self):
+        user = User.objects.create_user(username='samuel', password='123456')
+        book = Book.objects.create(title='Genealogia da Moral',
+                                   author='Nietzsche',
+                                   description='Uma descrição',
+                                   user=user)
+        question = Question.objects.create(book=book,
+                                           user=user,
+                                           level=2,
+                                           text='teste questao')
+        choice = Choice.objects.create(question=question,
+                                       correct=False,
+                                       text='Uma possível resposta')
+        Answer.objects.create(choice=choice, user=user)
+        self.client.login(username='samuel', password='123456')
+
+    def test_dashboard_request(self):
+        response = self.client.get('/dashboard/')
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'game/dashboard.html')
 
 
 class MockAdminRequest:

@@ -7,7 +7,12 @@
 
     <!-- Compiled and minified JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
     <title>{% block title %}Book Quiz{% endblock %}</title>
+    {% block scripthead %}
+    {% endblock scripthead %}
   </head>
 
   <body>
@@ -30,6 +35,15 @@
         <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
       </div>
     </nav>
+    <nav>
+      <div class="nav-wrapper">
+        <ul id="nav-mobile" class="left hide-on-med-and-down">
+          <li><a href="/" class="breadcrumb">Início</a></li>
+          <li><a href="/dashboard" class="breadcrumb">Dashboard de resultados</a></li>
+        </ul>
+      </div>
+    </nav>
+
     {% block content %}
     {% endblock content %}
 
