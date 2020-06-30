@@ -33,6 +33,9 @@ class QuestionTest(TestCase):
     def test_question_representation(self):
         self.assertEqual(str(self.question), self.question.text)
 
+    def test_question_already_answered(self):
+        self.assertEqual(self.question.already_answered(), False)
+
 
 class ChoiceTest(TestCase):
     def setUp(self):

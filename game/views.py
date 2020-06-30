@@ -33,7 +33,7 @@ def play(request, question_id):
             answer = form.save(commit=False)
             answer.user = request.user
             answer.save()
-            if answer.is_correct():
+            if answer.is_correct() and answer.is_unique():
                 player = request.user.player.first()
                 player.add_point(question, answer)
 

@@ -26,6 +26,9 @@ class Question(models.Model):
     level = models.IntegerField(choices=LEVELS)
     pub_date = models.DateTimeField(auto_now_add=True, blank=False)
 
+    def already_answered(self):
+        return bool(self.user.answers.filter(choice__question=self))
+
     def __str__(self):
         return f'{self.text}'
 
@@ -53,6 +56,9 @@ class Answer(models.Model):
 
     def is_correct(self):
         return self.choice.correct
+
+    def is_unique(self):
+        return self.user.answers.filter(choice=self.choice).count() == 1
 
     @property
     def question(self):
@@ -100,7 +106,8 @@ class Point(models.Model):
 
     @property
     def value(self):
-        wrong_answers = len(self.answer) - 1
+        wrong_answers = self.player.user.answers.filter(
+            choice__correct=False, choice__question=self.question).count()
         choices = self.__remove_choices_by_qtd_of_wrong_answers(wrong_answers)
 
         return sum(i.value for i in choices)
