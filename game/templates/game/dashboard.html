@@ -9,6 +9,8 @@
     google.charts.setOnLoadCallback(drawAnswerByBookChart);
     google.charts.setOnLoadCallback(drawAnswerByUserChart);
     google.charts.setOnLoadCallback(drawAnswerByDateChart);
+    google.charts.load('current', {'packages':['line']});
+    google.charts.setOnLoadCallback(drawChart);
     // Callback that creates and populates a data table,
     // instantiates the pie chart, passes in the data and
     // draws it.
@@ -82,25 +84,33 @@
     }
 
     function drawAnswerByDateChart() {
+      var data = new google.visualization.DataTable();
 
-      var data = google.visualization.arrayToDataTable([
+      data.addColumn('number', 'Dia');
+      data.addColumn('number', 'Respostas');
+
+      data.addRows([
         {% for answer in answer_by_date %}
-          ['Dia', 'Respostas'],
-          ["{{ answer.pub_date.day }}", {{ answer.id__count }}],
+          [{{ answer.pub_date.day }}, {{ answer.id__count }}],
         {% endfor %}
       ]);
 
       var options = {
-        title: 'Respostas por dia do mês atual',
-        curveType: 'function',
-        legend: { position: 'bottom' },
-        width:1200,
-        height:500
+        chart: {
+        title: 'Repostas por dia',
+        },
+        width: 900,
+        height: 500,
+         axes: {
+            x: {
+              0: { side: 'top'}
+           }
+        }
       };
 
-      var chart = new google.visualization.LineChart(document.getElementById('answer_by_date'));
+      var chart = new google.charts.Line(document.getElementById('answer_by_date'));
 
-      chart.draw(data, options);
+      chart.draw(data, google.charts.Line.convertOptions(options));
     }
 </script>
 {% endblock scripthead %}
