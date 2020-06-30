@@ -26,8 +26,8 @@ class Question(models.Model):
     level = models.IntegerField(choices=LEVELS)
     pub_date = models.DateTimeField(auto_now_add=True, blank=False)
 
-    def already_answered(self):
-        return bool(self.user.answers.filter(choice__question=self))
+    def already_answered(self, user):
+        return bool(user.answers.filter(choice__question=self))
 
     def __str__(self):
         return f'{self.text}'

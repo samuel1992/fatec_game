@@ -40,7 +40,8 @@ def play(request, question_id):
             return redirect('check_answer', answer_id=answer.id)
 
     form = AnswerForm(question)
-    context = {'question': question, 'form': form}
+    answered = question.already_answered(request.user)
+    context = {'question': question, 'form': form, 'answered': answered}
     return render(request, 'game/play.html', context)
 
 
