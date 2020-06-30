@@ -3,7 +3,7 @@
 {% block content %}
 <div class="container">
   <h4 class="center grey lighten-3">{{ question.book.title }}</h4>
-  {% if question.already_answered %}
+  {% if answered %}
     <h4 class="center red lighten-3">Você já respondeu essa pergunta anteriormente</h4>
   {% endif %}
   <blockquote>
